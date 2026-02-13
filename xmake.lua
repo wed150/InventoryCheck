@@ -8,7 +8,7 @@ if not has_config("vs_runtime") then
 end
 
 -- Option 1: Use the latest version of LeviLamina released on GitHub.
-add_requires("levilamina 1.9.1", {configs = {target_type = "server"}})
+add_requires("levilamina 1.9.2", {configs = {target_type = "server"}})
 add_requires("gmlib")
 
 -- Option 2: Use a specific version of LeviLamina released on GitHub.
@@ -61,9 +61,7 @@ target("InventoryCheck") -- Change this to your mod name.
         "levilamina",
         "gmlib"
     )
-    add_shflags(
-        "/DELAYLOAD:bedrock_server.dll" -- Magic to import symbols from BDS
-    )
+
     set_exceptions("none") -- To avoid conflicts with /EHa
     set_kind("shared")
     set_languages("c++23")
