@@ -1,14 +1,13 @@
 #include "Entry.h"
 #include "Global.h"
 #include "Language.h"
-
-ll::Logger logger(MOD_NAME);
+#include "gmlib/Version.h"
 
 namespace InventoryCheck {
 
-std::unique_ptr<Entry>& Entry::getInstance() {
+Entry& Entry::getInstance() {
     static std::unique_ptr<Entry> instance;
-    return instance;
+    return *instance;
 }
 
 bool Entry::load() {
@@ -20,11 +19,12 @@ bool Entry::load() {
     mI18n->updateOrCreateLanguage("en_US", en_US);
     mI18n->updateOrCreateLanguage("zh_CN", zh_CN);
     mI18n->loadAllLanguages();
-    if (GMLIB::Version::getProtocolVersion() != TARGET_PROTOCOL) {
+
+    if (ll::getNetworkProtocolVersion() != TARGET_PROTOCOL) {
         logger.error(tr("error.protocolMismatch.info"));
         logger.error(
             tr("error.protocolMismatch.version",
-               {std::to_string(TARGET_PROTOCOL), std::to_string(GMLIB::Version::getProtocolVersion())})
+               {std::to_string(TARGET_PROTOCOL), std::to_string(ll::getNetworkProtocolVersion())})
         );
     }
     return true;
@@ -44,11 +44,12 @@ bool Entry::disable() {
 }
 
 bool Entry::unload() {
-    getInstance().reset();
+    static std::unique_ptr<Entry> instance;
+    instance.reset();
     return true;
 }
 
-Config& Entry::getConfig() { return mConfig.value(); }
+Config1& Entry::getConfig() { return mConfig.value(); }
 
 LangI18n& Entry::getI18n() { return mI18n.value(); }
 
@@ -57,5 +58,5 @@ LangI18n& Entry::getI18n() { return mI18n.value(); }
 LL_REGISTER_MOD(InventoryCheck::Entry, InventoryCheck::Entry::getInstance());
 
 std::string tr(std::string const& key, std::vector<std::string> const& data) {
-    return InventoryCheck::Entry::getInstance()->getI18n().get(key, data);
+    return InventoryCheck::Entry::getInstance().getI18n().get(key, data);
 }

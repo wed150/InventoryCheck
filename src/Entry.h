@@ -3,15 +3,18 @@
 
 #include "Config.h"
 #include "Global.h"
+#include "gmlib/gm/i18n/LangI18n.h"
+
+#include <memory>
 
 namespace InventoryCheck {
 
-using namespace GMLIB::Files::I18n;
+using namespace gmlib::i18n;
 
 class Entry {
 
 public:
-    static std::unique_ptr<Entry>& getInstance();
+    static Entry& getInstance();
 
     Entry(ll::mod::NativeMod& self) : mSelf(self) {}
 
@@ -29,13 +32,13 @@ public:
     /// @return True if the mod is unloaded successfully.
     bool unload();
 
-    Config& getConfig();
+    Config1& getConfig();
 
     LangI18n& getI18n();
 
 private:
     ll::mod::NativeMod& mSelf;
-    std::optional<Config>     mConfig;
+    std::optional<Config1>     mConfig;
     std::optional<LangI18n>   mI18n;
 };
 
