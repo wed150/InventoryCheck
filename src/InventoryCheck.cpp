@@ -295,7 +295,7 @@ void confirmDeleteForm(Player& pl, mce::UUID const& uuid, std::string const& nam
             if (auto player = ll::service::getLevel()->getPlayer(uuid)) {
                 return deleteFailedForm(pl, uuid, name);
             }
-            auto pl1=(static_cast<gmlib::GMPlayer&>(*pl));
+            auto pl1=(static_cast<gmlib::GMPlayer&>(pl));
             pl1.setNbt(*new CompoundTag());
             return pl.sendMessage(tr("checkPlayer.deletePlayer.success", {name}));
         }
