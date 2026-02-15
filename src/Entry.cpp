@@ -6,8 +6,8 @@
 namespace InventoryCheck {
 
 Entry& Entry::getInstance() {
-    static std::unique_ptr<Entry> instance;
-    return *instance;
+    static Entry instance;
+    return instance;
 }
 
 bool Entry::load() {
@@ -21,20 +21,13 @@ bool Entry::load() {
     mI18n->loadAllLanguages();
 
     if (ll::getNetworkProtocolVersion() != TARGET_PROTOCOL) {
-        logger.error(tr("error.protocolMismatch.info"));
-        logger.error(
-            tr("error.protocolMismatch.version",
-               {std::to_string(TARGET_PROTOCOL), std::to_string(ll::getNetworkProtocolVersion())})
-        );
+
     }
     return true;
 }
 
 bool Entry::enable() {
     RegisterCommand();
-    logger.info("InventoryCheck Loaded!");
-    logger.info("Author: GroupMountain");
-    logger.info("Repository: https://github.com/GroupMountain/InventoryCheck");
     return true;
 }
 
@@ -43,11 +36,7 @@ bool Entry::disable() {
     return true;
 }
 
-bool Entry::unload() {
-    static std::unique_ptr<Entry> instance;
-    instance.reset();
-    return true;
-}
+
 
 Config1& Entry::getConfig() { return mConfig.value(); }
 

@@ -1,15 +1,14 @@
 #include "Global.h"
 
 #include <filesystem>
-#include <gmlib/mc/world/actor/Player.h>
-#include <gmlib/mc/world/Level.h>
+
 #include <unordered_map>
 
 bool saveInventory(Player& player) {
     auto& pl   = static_cast<gmlib::GMPlayer&>(player);
     auto  uuid = pl.getUuid();
     ll::file_utils::writeFile(
-        "./plugins/InventoryCheck/save/" + uuid.asString() + ".dat",
+        "./plugins/InventoryChecker/save/" + uuid.asString() + ".dat",
         pl.getNbt()->toBinaryNbt(),
         true
     );
@@ -19,16 +18,18 @@ bool saveInventory(Player& player) {
 bool resumeInventory(Player& player) {
     auto&       pl   = static_cast<gmlib::GMPlayer&>(player);
     auto        uuid = pl.getUuid();
-    std::string path = "./plugins/InventoryCheck/save/" + uuid.asString() + ".dat";
+    std::string path = "./plugins/InventoryChecker/save/" + uuid.asString() + ".dat";
     if (auto binaryData = ll::file_utils::readFile(path, true)) {
         std::filesystem::remove(path);
         if (auto nbt = CompoundTag::fromBinaryNbt(binaryData.value())) {
             auto playerNbt=pl.getNbt();
-            playerNbt->mTags["Armor"] = nbt->at("Armor");
+            playerNbt->mTags["Armor"] =nbt->at("Armor");
             playerNbt->mTags["EnderChestInventory"] = nbt->at("EnderChestInventory");
             playerNbt->mTags["Offhand"] = nbt->at("Offhand");
             playerNbt->mTags["Inventory"] = nbt->at("Inventory");
             pl.setNbt(*playerNbt);
+            pl.refreshInventory();
+
 
             return true;
         }
@@ -208,24 +209,46 @@ void searchNotFoundForm(Player& pl, std::string const& name) {
         return mainForm(pl);
     });
 }
+std::unique_ptr<CompoundTag> nbt_Getter(mce::UUID uuid) {
 
+    if (auto player = ll::service::getLevel()->getPlayer(uuid)) {
+        auto& pl=static_cast<gmlib::GMPlayer&>(*player);
+        return pl.getNbt();
+    }
+    else {
+        auto db   = ll::service::getDBStorage();
+        if (db && db->hasKey("player_" + uuid.asString(), DBHelpers::Category::Player)) {
+            std::unique_ptr<CompoundTag> playerTag =
+                db->getCompoundTag("player_" + uuid.asString(), DBHelpers::Category::Player);
+            if (playerTag) {
+                std::string serverId = playerTag->at("ServerId");
+                if (!serverId.empty() && db->hasKey(serverId, DBHelpers::Category::Player)) {
+                    return db->getCompoundTag(serverId, DBHelpers::Category::Player);
+                }
+            }
+        }
+
+    }
+    return nullptr;
+}
 void checkPlayerForm(Player& pl, mce::UUID const& uuid) {
     std::string name = getNameFormUuid(uuid);
     auto        fm   = ll::form::SimpleForm(tr("form.checkPlayer.title"), tr("form.checkPlayer.content", {name}));
     fm.appendButton(tr("form.checkPlayer.copyInventory"), [uuid, name](Player& pl) {
         saveInventory(pl);
-        auto pl1= (static_cast<gmlib::GMPlayer&>(pl));
-        auto nbt = pl1.getNbt();
+        auto& pl1= (static_cast<gmlib::GMPlayer&>(pl));
+        auto nbt =nbt_Getter(uuid);
         if (!nbt) {
             return pl.sendMessage(tr("checkPlayer.copyInventory.failed", {name}));
         }
-        auto& self = static_cast<gmlib::GMPlayer&>(pl);
         auto playerNbt=pl1.getNbt();
         playerNbt->mTags["Armor"] = nbt->at("Armor");
         playerNbt->mTags["EnderChestInventory"] = nbt->at("EnderChestInventory");
         playerNbt->mTags["Offhand"] = nbt->at("Offhand");
         playerNbt->mTags["Inventory"] = nbt->at("Inventory");
         pl1.setNbt(*playerNbt);
+            pl.refreshInventory();
+
         return pl.sendMessage(tr("checkPlayer.copyInventory.success", {name}));
     });
     fm.appendButton(tr("form.checkPlayer.writeInventory"), [uuid, name](Player& pl) {
@@ -255,6 +278,42 @@ void invalidInputForm(Player& pl) {
         return mainForm(pl);
     });
 }
+namespace MoreGlobal {
+
+DefaultDataLoadHelper  helper;
+DefaultDataLoadHelper& defaultDataLoadHelper() { return helper; }
+
+} // namespace lse::api::MoreGlobal
+bool Nbt_Setter(mce::UUID uuid, std::unique_ptr<CompoundTag> nbt) {
+    try {
+
+
+        Player*   player = ll::service::getLevel()->getPlayer(uuid);
+        if (player && nbt) {
+            player->load(*nbt, MoreGlobal::defaultDataLoadHelper());
+            player->refreshInventory();
+            return true;
+        } else if (nbt) {
+            auto db = ll::service::getDBStorage();
+            if (db && db->hasKey("player_" + uuid.asString(), DBHelpers::Category::Player)) {
+                std::unique_ptr<CompoundTag> playerTag =
+                    db->getCompoundTag("player_" + uuid.asString(), DBHelpers::Category::Player);
+                if (playerTag) {
+                    std::string serverId = playerTag->at("ServerId");
+                    if (!serverId.empty()) {
+                        db->saveData(serverId, nbt->toBinaryNbt(), DBHelpers::Category::Player);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    catch (...) {
+
+        return false;
+    }
+}
 
 void confirmWriteForm(Player& pl, mce::UUID const& uuid, std::string const& name) {
     auto fm = ll::form::ModalForm(
@@ -267,16 +326,20 @@ void confirmWriteForm(Player& pl, mce::UUID const& uuid, std::string const& name
         if (result == ll::form::ModalFormSelectedButton::Upper) {
             auto& self      = static_cast<gmlib::GMPlayer&>(pl);
             auto  nbt       = self.getNbt();
-            auto  targetNbt = self.getNbt();
+            auto  targetNbt = nbt_Getter(uuid);
             if (!targetNbt) {
                 return pl.sendMessage(tr("checkPlayer.writeInventory.failed", {name}));
             }
-            auto playerNbt=self.getNbt();
-            playerNbt->mTags["Armor"] = nbt->at("Armor");
-            playerNbt->mTags["EnderChestInventory"] = nbt->at("EnderChestInventory");
-            playerNbt->mTags["Offhand"] = nbt->at("Offhand");
-            playerNbt->mTags["Inventory"] = nbt->at("Inventory");
-self.setNbt(*playerNbt);
+            targetNbt->mTags["Armor"] = nbt->at("Armor");
+            targetNbt->mTags["EnderChestInventory"] = nbt->at("EnderChestInventory");
+            targetNbt->mTags["Offhand"] = nbt->at("Offhand");
+            targetNbt->mTags["Inventory"] = nbt->at("Inventory");
+            bool success= Nbt_Setter(uuid, std::move(targetNbt));
+            pl.refreshInventory();
+            if (!success) {
+                return pl.sendMessage(tr("checkPlayer.writeInventory.failed", {name}));
+            }
+
             return pl.sendMessage(tr("checkPlayer.writeInventory.success", {name}));
         }
         return checkPlayerForm(pl, uuid);
@@ -295,8 +358,8 @@ void confirmDeleteForm(Player& pl, mce::UUID const& uuid, std::string const& nam
             if (auto player = ll::service::getLevel()->getPlayer(uuid)) {
                 return deleteFailedForm(pl, uuid, name);
             }
-            auto pl1=(static_cast<gmlib::GMPlayer&>(pl));
-            pl1.setNbt(*new CompoundTag());
+        gmlib::OfflinePlayer::deletePlayerNbt(uuid);
+
             return pl.sendMessage(tr("checkPlayer.deletePlayer.success", {name}));
         }
         return checkPlayerForm(pl, uuid);

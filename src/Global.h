@@ -6,15 +6,13 @@
 #include "gmlib/include_mc.h"
 
 #include "gmlib/include_ll.h"
-#include "gmlib/include_static_lib.h"
-#include "gmlib/include_shared_lib.h"
+#include "gmlib/include_lib.h"
 #include <string>
 #include <vector>
 
 #define MOD_NAME     "InventoryCheck"
 #define TARGET_PROTOCOL 898
 
-extern ll::io::Logger logger;
 
 extern std::string tr(std::string const& key, std::vector<std::string> const& data = {});
 

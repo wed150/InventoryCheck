@@ -3,7 +3,6 @@
 
 #include "Config.h"
 #include "Global.h"
-#include "gmlib/gm/i18n/LangI18n.h"
 
 #include <memory>
 
@@ -16,7 +15,7 @@ class Entry {
 public:
     static Entry& getInstance();
 
-    Entry(ll::mod::NativeMod& self) : mSelf(self) {}
+    Entry() : mSelf((*ll::mod::NativeMod::current())) {}
 
     [[nodiscard]] ll::mod::NativeMod& getSelf() const { return mSelf; }
 
@@ -30,7 +29,6 @@ public:
     bool disable();
 
     /// @return True if the mod is unloaded successfully.
-    bool unload();
 
     Config1& getConfig();
 

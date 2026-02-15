@@ -1,29 +1,39 @@
 {
-    "format_version": 2,
-    "tooth": "github.com/GroupMountain/InventoryCheck",
-    "version": "0.13.1",
+    "format_version": 3,
+    "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
+    "tooth": "example.com/my-user/my-mod",
+    "version": "0.0.0",
     "info": {
-        "name": "InventoryCheck",
-        "description": "Check Player's Inventory",
-        "author": "GroupMountain",
-        "source": "github.com/GroupMountain/InventoryCheck",
+        "name": "My Mod",
+        "description": "Description of my mod",
         "tags": [
-            "levilamina",
-            "inventory",
-            "checkbag",
-            "gmlib"
-        ]
+            "platform:levilamina",
+            "type:mod"
+        ],
+        "avatar_url": "https://raw.githubusercontent.com/my-user/my-mod/refs/heads/main/icon.jpg"
     },
-    "asset_url": "https://github.com/GroupMountain/InventoryCheck/releases/download/v0.13.1/InventoryCheck-windows-x64.zip",
-    "dependencies": {
-        "github.com/GroupMountain/GMLIB": ">=0.13.7"
-    },
-    "files": {
-        "place": [
-            {
-                "src": "InventoryCheck/*",
-                "dest": "plugins/InventoryCheck"
-            }
-        ]
-    }
+    "variants": [
+        {
+            "platform": "win-x64",
+            "dependencies": {
+                "github.com/LiteLDev/LeviLamina": "Required LeviLamina version range",
+                "github.com/GroupMountain/GMLIB": "Required GMLIB version range"
+            },
+            "assets": [
+                {
+                    "type": "zip",
+                    "urls": [
+                        "https://{{tooth}}/releases/download/v{{version}}/my-mod-windows-x64.zip"
+                    ],
+                    "placements": [
+                        {
+                            "type": "dir",
+                            "src": "my-mod/",
+                            "dest": "plugins/my-mod/"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
