@@ -3,29 +3,17 @@ add_rules("mode.debug", "mode.release")
 add_repositories("liteldev-repo https://github.com/LiteLDev/xmake-repo.git")
 add_repositories("groupmountain-repo https://github.com/GroupMountain/xmake-repo.git")
 
-<<<<<<< HEAD
 add_requires("levilamina 1.9.1", {configs = {target_type = "server"}})
 add_requires("levibuildscript 0.5.2")
-=======
-add_requires("levilamina 1.9.2", {configs = {target_type = "server"}})
-add_requires("levibuildscript")
->>>>>>> f638ec26db6fccb3fac567a880b2a602b1849af3
 add_requires("gmlib")
 
 if not has_config("vs_runtime") then
     set_runtimes("MD")
 end
 
-<<<<<<< HEAD
 target("InventoryChecker")
     add_rules("@levibuildscript/linkrule")
     add_rules("@levibuildscript/modpacker")
-
-=======
-target("my-mod")
-    add_rules("@levibuildscript/linkrule")
-    add_rules("@levibuildscript/modpacker")
->>>>>>> f638ec26db6fccb3fac567a880b2a602b1849af3
     add_cxflags(
         "/EHa",
         "/utf-8",
@@ -53,8 +41,4 @@ target("my-mod")
     set_symbols("debug")
     add_headerfiles("src/**.h")
     add_files("src/**.cpp")
-<<<<<<< HEAD
     add_includedirs("src")
-=======
-    add_includedirs("src")
->>>>>>> f638ec26db6fccb3fac567a880b2a602b1849af3
