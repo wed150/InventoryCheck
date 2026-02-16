@@ -1,5 +1,5 @@
 #include "Global.h"
-
+#include "Entry.h"
 #include <filesystem>
 
 #include <unordered_map>
@@ -285,9 +285,8 @@ DefaultDataLoadHelper& defaultDataLoadHelper() { return helper; }
 
 } // namespace lse::api::MoreGlobal
 bool Nbt_Setter(mce::UUID uuid, std::unique_ptr<CompoundTag> nbt) {
+    auto& logger = InventoryCheck::Entry::getInstance().getSelf().getLogger();
     try {
-
-
         Player*   player = ll::service::getLevel()->getPlayer(uuid);
         if (player && nbt) {
             player->load(*nbt, MoreGlobal::defaultDataLoadHelper());
@@ -301,6 +300,7 @@ bool Nbt_Setter(mce::UUID uuid, std::unique_ptr<CompoundTag> nbt) {
                 if (playerTag) {
                     std::string serverId = playerTag->at("ServerId");
                     if (!serverId.empty()) {
+                        logger.info("serverId ok");
                         db->saveData(serverId, nbt->toBinaryNbt(), DBHelpers::Category::Player);
                         return true;
                     }
@@ -309,8 +309,8 @@ bool Nbt_Setter(mce::UUID uuid, std::unique_ptr<CompoundTag> nbt) {
         }
         return false;
     }
-    catch (...) {
-
+    catch (const std::exception& e) {
+        logger.error("Standard exception in Nbt_Setter: " + std::string(e.what()));
         return false;
     }
 }
