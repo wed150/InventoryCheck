@@ -1,26 +1,33 @@
-# GMLIB Mod Template
+<div align="center">
+ 
+  # InventoryCheck
+  
+检测玩家的背包,物品栏,装备栏,末影箱
 
-Mod Template for GMLIB
+Adapt to LeviLamina 1.9.x by wed15
 
-## Usage
+新手 练手的 有问题正常awa
 
-For detailed instructions, see the [LeviLamina Documentation](https://lamina.levimc.org/developer_guides/tutorials/create_your_first_mod/)
+源自开源项目github.com/GroupMountain/InventoryCheck的分支
 
-1. Generate a new repository from this template
-2. Clone the new repository
-3. Change the mod name and the expected LeviLamina and GMLIB version in `xmake.lua`
-4. Add your code.
-5. Run `xmake f -y -p windows -a x64 -m release` in the root of the repository
-6. Run `xmake` to build the mod.
 
-After a successful build, you will find mod in `bin/`
+<br>
+<br><br><br><br>
 
-## Contributing
 
-Ask questions by creating an issue.
 
-PRs accepted.
-
-## License
-
-MIT © GroupMountain
+# 开源许可
+## 源代码可用性
+ 您可以自由地获取、使用和修改本插件的源代码，无论是个人使用还是商业目的。
+## 修改发布
+ 如果您对本插件进行了修改或衍生创作，并打算分发、发布该修改或衍生作品，您必须开源并且以GPL3.0协议下相同的许可证条件进行分发。
+## 版权声明
+ 在您分发或发布基于GPL3.0协议的软件时（包括但不限于本插件以及本插件的衍生作品），您必须保留原始版权声明、许可证说明和免责声明。
+## 引用链接
+ 如果您在一个作品中使用了本插件或者本插件的源码，您需要提供一个明确的引用链接，指向软件的许可证和源代码。
+## 对整体的影响
+ 如果您将基于本插件与其他插件结合使用，或整合成一个单一的插件，那么整个插件都需要遵守GPL3.0协议进行开源。
+ </div>
+ 
+>[!TIP] 
+> Fork from github.com/GroupMountain/InventoryCheck
