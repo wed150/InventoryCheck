@@ -8,13 +8,37 @@ Adapt to LeviLamina 1.9.x by wed15
 
 新手 练手的 有问题正常awa
 
-源自开源项目github.com/GroupMountain/InventoryCheck的分支
+开源项目github.com/GroupMountain/InventoryCheck的分支
 
+直接从存档直接读写数据
+可直接覆盖玩家背包或删除玩家全部数据
+使用命令/inventorycheck或/ic打开查包GUI即可查询
+
+支持读取玩家背包和写入玩家背包
+支持删除玩家数据
+
+读取背包时会自动备份当前背包，如果出现意外（比如刚好服务器炸了）可以恢复自己背包。
+
+
+## 前置库
+本插件需要前置库GMLIB
+
+
+ 
+## 配置文件
+
+  </div>
+  
+``` Json
+{
+    "language": "en_US"   //插件语言 可选"zh_CN"或"en_US"
+}
+```
 
 <br>
 <br><br><br><br>
 
-
+<div align="center">
 
 # 开源许可
 ## 源代码可用性
@@ -27,7 +51,7 @@ Adapt to LeviLamina 1.9.x by wed15
  如果您在一个作品中使用了本插件或者本插件的源码，您需要提供一个明确的引用链接，指向软件的许可证和源代码。
 ## 对整体的影响
  如果您将基于本插件与其他插件结合使用，或整合成一个单一的插件，那么整个插件都需要遵守GPL3.0协议进行开源。
- </div>
+  </div>
  
 >[!TIP] 
 > Fork from github.com/GroupMountain/InventoryCheck
