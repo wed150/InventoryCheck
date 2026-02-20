@@ -1,35 +1,38 @@
 {
     "format_version": 3,
     "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
-    "tooth": "example.com/my-user/my-mod",
-    "version": "0.0.0",
+    "tooth": "github.com/wed150/InventoryCheck/",
+    "version": "0.13.2",
     "info": {
-        "name": "My Mod",
-        "description": "Description of my mod",
+        "name": "InventoryCheck",
+        "description": "Check Player's Inventory",
         "tags": [
             "platform:levilamina",
-            "type:mod"
+            "type:mod",
+            "inventory",
+            "checkbag",
+            "gmlib"
         ],
-        "avatar_url": "https://raw.githubusercontent.com/my-user/my-mod/refs/heads/main/icon.jpg"
+        "avatar_url": "https://raw.githubusercontent.com/wed150/InventoryCheck/refs/heads/main/icon.jpg"
     },
     "variants": [
         {
             "platform": "win-x64",
             "dependencies": {
-                "github.com/LiteLDev/LeviLamina": "Required LeviLamina version range",
-                "github.com/GroupMountain/GMLIB": "Required GMLIB version range"
+                "github.com/LiteLDev/LeviLamina": ">=1.9.0",
+                "github.com/GroupMountain/GMLIB": ">=1.9.0"
             },
             "assets": [
                 {
                     "type": "zip",
                     "urls": [
-                        "https://{{tooth}}/releases/download/v{{version}}/my-mod-windows-x64.zip"
+                        "https://{{tooth}}/releases/download/v{{version}}/InventoryCheck-windows-x64.zip"
                     ],
                     "placements": [
                         {
                             "type": "dir",
-                            "src": "my-mod/",
-                            "dest": "plugins/my-mod/"
+                            "src": "InventoryCheck/",
+                            "dest": "plugins/InventoryCheck/"
                         }
                     ]
                 }
