@@ -292,26 +292,26 @@ bool Nbt_Setter(mce::UUID uuid, std::unique_ptr<CompoundTag> nbt) {
             player->load(*nbt, MoreGlobal::defaultDataLoadHelper());
             player->refreshInventory();
             return true;
-        } else if (nbt) {
-            auto db = ll::service::getDBStorage();
+        } else if (nbt) {auto db = ll::service::getDBStorage();
             if (db && db->hasKey("player_" + uuid.asString(), DBHelpers::Category::Player)) {
                 std::unique_ptr<CompoundTag> playerTag =
                     db->getCompoundTag("player_" + uuid.asString(), DBHelpers::Category::Player);
                 if (playerTag) {
                     std::string serverId = playerTag->at("ServerId");
                     if (!serverId.empty()) {
-                        logger.info("serverId ok");
-                        db->saveData(serverId, nbt->toBinaryNbt(), DBHelpers::Category::Player);
+                        auto player_offline = gmlib::OfflinePlayer(uuid,serverId);
+                        player_offline.setNbt(*nbt);
                         return true;
                     }
                 }
             }
+
         }
         return false;
     }
-    catch (const std::exception& e) {
-        logger.error("Standard exception in Nbt_Setter: " + std::string(e.what()));
+    catch (...) {
         return false;
+
     }
 }
 
