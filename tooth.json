@@ -8,10 +8,7 @@
         "description": "Check Player's Inventory",
         "tags": [
             "platform:levilamina",
-            "type:mod",
-            "inventory",
-            "checkbag",
-            "gmlib"
+            "type:mod"
         ],
         "avatar_url": "https://raw.githubusercontent.com/wed150/InventoryCheck/refs/heads/main/icon.jpg"
     },
