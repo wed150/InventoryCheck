@@ -1,7 +1,13 @@
 #include "Entry.h"
 #include "Global.h"
 #include "Language.h"
-#include "gmlib/Version.h"
+
+#include "ll/api/Config.h"
+#include "ll/api/Versions.h"
+#include "ll/api/mod/RegisterHelper.h"
+
+#include "gmlib/gm/i18n/LangI18n.h"
+#include "gmlib/gm/i18n/JsonI18n.h"
 
 namespace InventoryCheck {
 

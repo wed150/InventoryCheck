@@ -3,6 +3,7 @@
 
 #include "Config.h"
 #include "Global.h"
+#include "gmlib/gm/i18n/LangI18n.h"
 
 #include <memory>
 

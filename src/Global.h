@@ -1,17 +1,14 @@
 #pragma once
 
 #include <span>
-#include "mc/world/events/LevelTickingAreaFinishedLoadingEvent.h"
 
-#include "gmlib/include_mc.h"
+#include "mc/world/actor/player/Player.h"
 
-#include "gmlib/include_ll.h"
-#include "gmlib/include_lib.h"
 #include <string>
 #include <vector>
 
 #define MOD_NAME     "InventoryCheck"
-#define TARGET_PROTOCOL 898
+#define TARGET_PROTOCOL 944
 
 
 extern std::string tr(std::string const& key, std::vector<std::string> const& data = {});
