@@ -28,8 +28,8 @@
                     "placements": [
                         {
                             "type": "dir",
-                            "src": "InventoryCheck/",
-                            "dest": "plugins/InventoryCheck/"
+                            "src": "InventoryChecker/",
+                            "dest": "plugins/InventoryChecker/"
                         }
                     ]
                 }
